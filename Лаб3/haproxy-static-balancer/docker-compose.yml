@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  worker1:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+      args:
+        - WORKER_ID=1
+    expose:
+        - 80
+  worker2:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+      args:
+        - WORKER_ID=2
+    expose:
+        - 80
+  haproxy:
+    image: haproxy
+    volumes:
+        - ./haproxy:/usr/local/etc/haproxy # путь к файлу конфигурации haproxy
+    links:
+        - worker1
+        - worker2
+    ports:
+        - "8080:80"  # Преобразование порта
+    expose:
+        - 80   # haproxy Внешние порты
