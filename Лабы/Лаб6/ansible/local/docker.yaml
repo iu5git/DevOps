@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+
+  tasks:
+  - name: Build App image
+    docker_image:
+      name: app
+      build:
+        path: ../app
+      source: build
+  - name: Run App container
+    docker_container:
+       name: 'app'
+       recreate: true
+       restart_policy: unless-stopped
+       image: 'app'
+       published_ports:
+          - "8080:8080"
+       env:
+         PORT: "8080"
+         WORKER: "1"
+      

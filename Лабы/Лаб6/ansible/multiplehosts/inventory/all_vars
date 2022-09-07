@@ -1,0 +1,5 @@
+[all:vars]
+
+ansible_connection=ssh
+ansible_user=worker
+ansible_ssh_pass=worker
