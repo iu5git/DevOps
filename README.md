@@ -1,6 +1,8 @@
 # DevOps
 Репозиторий курса DevOps
 
+## [Видеозаписи лекций в youtube](https://youtube.com/playlist?list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q)
+
 ## Лекции
 
 * Лекция 1. Введение в DevOps. Системы виртуализации и облачные решения (Михаил Кучеренко)
