@@ -1,6 +1,6 @@
 ---
 
-- name: Setup proxy balancer for remote heosts
+- name: Setup proxy balancer for remote hosts
   hosts: workers 
   become: true
   vars:
