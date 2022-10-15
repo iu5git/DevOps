@@ -1,9 +1,9 @@
 # Масштабируемость и отказоустойчивость + docker compose
 
 *Задачи лабораторной работы:*
-1. Изучить работу docker-compose на примере проекта test-compose
+1. Изучить работу docker-compose на примере проекта [test-compose](https://github.com/iu5git/DevOps/tree/main/Лабы/Лаб3/test-compose)
    1. Задача: Заменить надпись на свое имя, запустить контейнер, продемонстрирать результат
-2. Изучить методы балансировки нагрузки между узлами кластера. 
+2. Изучить методы балансировки нагрузки между узлами кластера. [Ha proxy balancer](https://github.com/iu5git/DevOps/tree/main/Лабы/Лаб3/haproxy-static-balancer), [nginx-balancer](https://github.com/iu5git/DevOps/tree/main/Лабы/Лаб3/nginx-static-balancer)
    Собрать статистику на 10 запросах для методов и объяснить результаты: 
    1. RoundRobin
    2. RoundRobin с добавлением веса
