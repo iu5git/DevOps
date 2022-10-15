@@ -4,7 +4,7 @@ services:
   nworker1:
     build:
       context: ../worker
-      dockerfile: ../worker/Dockerfile
+      dockerfile: Dockerfile
       args:
         - WORKER_ID=1
     expose:
@@ -13,7 +13,7 @@ services:
   nworker2:
     build:
       context: ../worker
-      dockerfile: ../worker/Dockerfile
+      dockerfile: Dockerfile
       args:
         - WORKER_ID=2
     expose:
@@ -22,7 +22,7 @@ services:
   nworker3:
     build:
       context: ../worker
-      dockerfile: ../worker/Dockerfile
+      dockerfile: Dockerfile
       args:
         - WORKER_ID=3
     expose:
