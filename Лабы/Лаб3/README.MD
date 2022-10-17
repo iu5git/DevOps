@@ -11,8 +11,8 @@
     - [Docker-compose](https://www.youtube.com/watch?v=-bbxABMdHig&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=5)
 ## Задачи лабораторной работы
 ### Задание 1: Изучить работу docker-compose на примере проекта [test-compose](https://github.com/iu5git/DevOps/tree/main/Лабы/Лаб3/test-compose)
-   cd test-compose
-   docker compose up
+    cd test-compose
+    docker compose up
    **Задача**: Заменить надпись на свое имя, запустить контейнер, продемонстрирать результат 
 ### Задание 2: Изучить методы балансировки нагрузки между узлами кластера. 
    - Изучить структуру проектов: [Ha proxy balancer](https://github.com/iu5git/DevOps/tree/main/Лабы/Лаб3/haproxy-static-balancer), [nginx-balancer](https://github.com/iu5git/DevOps/tree/main/Лабы/Лаб3/nginx-static-balancer)
