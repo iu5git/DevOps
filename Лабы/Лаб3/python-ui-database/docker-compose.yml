@@ -13,6 +13,8 @@ services:
       - "32000:3306"
     volumes: # привязка каталога на диске хост машины к контейнеру
       - ./db:/docker-entrypoint-initdb.d/:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
