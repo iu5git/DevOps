@@ -6,6 +6,11 @@ services:
       - db
     ports:  # проброс портов <Host>:<Container>
       - "8090:5000"
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   db:
     image: mysql:5.7
