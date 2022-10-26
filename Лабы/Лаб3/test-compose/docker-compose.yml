@@ -1,6 +1,6 @@
 version: "3.2"
 
 services:
-  whale:
-    image: docker/whalesay
-    command: ["cowsay", "hello!"]
+  whale: #название сервиса
+    image: docker/whalesay #образ, на основании которогостроится контейнер
+    command: ["cowsay", "hello!"]  #команда, которая передается в контейнер
