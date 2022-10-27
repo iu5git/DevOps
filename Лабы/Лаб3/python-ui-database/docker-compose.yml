@@ -11,6 +11,7 @@ services:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PORT: ${MYSQL_PORT}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PORT: 5000
 
   db:
     image: mysql:5.7

@@ -2,6 +2,10 @@
 
 
 ## Подготовка к работе
+### 
+- Работа в операционной системе семейства Linux
+- Установленный и настроеный пакет docker
+- 
 ### Установка docker-compose
 ```
 # Если не установлена утилита curl
@@ -238,7 +242,7 @@ haproxy-static-balancer-haproxy-1  | [NOTICE]   (1) : Loading success.
 ![img.png](img.png)
 Обновите страницу несколько раз и выувидите, как цифра меняется
 
-**Задача**: Собрать статистику на 10 запросах для разных методов балансировки и объяснить результаты: 
+**Задача**: Собрать статистику на 10 запросах для разных методов балансировки и объяснить результаты, сделать снимок экана для отчета: 
    1. RoundRobin
    2. RoundRobin с добавлением веса
    3. LeastConnection 
@@ -273,11 +277,16 @@ services:
       - db
     ports:  # проброс портов <Host>:<Container>
       - "8090:5000"
-
+    environment: # передаем параметры связи сбазой контейнеру приложения
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PORT: 5000 # порт приложения
   db:
     image: mysql:5.7
     ports:
-      - "32000:3306"
+      - "32000:3306" # 32000 - порт для подключения к базе внешним клиентом
     volumes: 
       - ./db:/docker-entrypoint-initdb.d/:ro # привязка каталога на диске со скриптами для баы данных хост машины к контейнеру
     environment:
@@ -308,16 +317,34 @@ MYSQL_PORT=3306
 ```
 **Задача**: 
 1. Текущее собержимое базы
-Зайти в окно браузера и набрать: [localhost:8090](localhost:8090)
-
+Зайти в окно браузера и набрать: [localhost:8090](localhost:8090), вы увидите текущее содержимое базы, сделать снимок экана для отчета
+![img_2.png](img_2.png)
 2. Добавить запись в базу используя встроенный контейнер phpmyadmin
 - Зайти в окно браузера и набрать: [localhost:8080](localhost:8080)
 - В дереве слева выбрать knights->favorite_colors
-- Вставить запись в таблицу
+- Вставить запись в таблицу, сделать снимок экана для отчета
 ![img_1.png](img_1.png)
+- Зайти в окно браузера и набрать: [localhost:8090](localhost:8090), вы увидите добавленную запись, сделать снимок экана для отчета
+3. Подключиться к базе с использованием внешнего клиента
+Для этой цели мы можем переиспользвать контейнер app из предыдущего пункта
+Откройте новое окно консоли
+```
+docker ps
+CONTAINER ID   IMAGE                          COMMAND                  CREATED          STATUS         PORTS                                                    NAMES
+ad536661d2e6   python-ui-database-app         "/bin/sh -c 'python …"   4 minutes ago    Up 4 minutes   0.0.0.0:8090->5000/tcp, :::8090->5000/tcp                python-ui-database-app-1
+de188ea0cd37   phpmyadmin/phpmyadmin:latest   "/docker-entrypoint.…"   27 minutes ago   Up 4 minutes   0.0.0.0:8080->80/tcp, :::8080->80/tcp                    python-ui-database-phpmyadmin-1
+433a362a0747   mysql:5.7                      "docker-entrypoint.s…"   27 minutes ago   Up 4 minutes   33060/tcp, 0.0.0.0:32000->3306/tcp, :::32000->3306/tcp   python-ui-database-db-1
 
-3. (Дополнительно) Добавить запись в базу используя внешний клиент, например [Datagrip](https://www.jetbrains.com/datagrip/).
-4. (Дополнительно) Добавить в проект еще один сервис app (по аналогии с заданием 2), добавить балансировщик нагрузки для сервисов app, испльзуя либо контейнер nginx либо haproxy
+
+#python-ui-database-app  - нужный нам образ
+
+docker run -e MYSQL_HOST=localhost -e MYSQL_PORT=32000 -e MYSQL_ROOT_PASSWORD=root -e MYSQL_USER=root -e PORT=8099 python-ui-database-app
+#MYSQL_PORT=32000  - мы используем внешний порт mysql для подключения к базе
+```
+Зайти в окно браузера и набрать: [localhost:8099](localhost:8099), вы должны увидеть содержимое базы, сделать снимок экана для отчета
+
+4. (Дополнительно) Добавить запись в базу используя внешний клиент, например [Datagrip](https://www.jetbrains.com/datagrip/).
+5. (Дополнительно) Добавить в проект еще один сервис app (по аналогии с заданием 2), добавить балансировщик нагрузки для сервисов app, испльзуя либо контейнер nginx либо haproxy
 
 ## Формат отчета
 - Doc-документ
