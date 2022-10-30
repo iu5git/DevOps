@@ -2,10 +2,17 @@ Ansible, Playbook
 
 
 ## Подготовка к работе
-### 
+
 - Работа в операционной системе семейства Linux
 - Устанвленные Docker,Docker-compose
 - Установленный пакет Python3
+
+### Установка busybox
+```
+
+docker build -t lab6-base -f Dockerfile.base .
+```
+
 
 ### Установка Ansible
 ```
