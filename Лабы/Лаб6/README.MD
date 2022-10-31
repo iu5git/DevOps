@@ -1,5 +1,4 @@
-Ansible, Playbook
-
+# Ansible, Playbook
 
 ## Подготовка к работе
 
@@ -7,32 +6,12 @@ Ansible, Playbook
 - Устанвленные Docker,Docker-compose
 - Установленный пакет Python3
 
-### Установка busybox
-```
+### Дополнительные материалы
+Для выполнения лабораторной работы необходимы будут материалы лекций:
+- [Docker](https://www.youtube.com/watch?v=WjRye2bByEw&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=2)
+- [Docker-compose](https://www.youtube.com/watch?v=-bbxABMdHig&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=5)
+- [Ansible](https://www.youtube.com/watch?v=59HZ6R6nYQ4&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=6)
 
-docker build -t lab6-base -f Dockerfile.base .
-```
-
-
-### Установка Ansible
-```
-# Обновить репозитарии
-sudo apt update
-sudo apt -y upgrade
-
-# Проверка версии пакета
-python3 -V
-
-# Проверка, установлен ли менеджер пакетов pip
-python3 -m pip -V
-
-# Установка менеджера пакетов pip (ели не установлен)
-sudo apt install -y python3-pip
-
-# Установка Ansible
-pip3 install ansible
-
-```
 ### Подготовка проекта
   - скачать проект [DevOps](https://github.com/iu5git/DevOps) на локальную машину: Code ->Download Zip
   ![download.png](download.png)
@@ -44,15 +23,73 @@ cd DevOps-master/Лабы/Лаб6
 
 ```
 
-### Дополнительные материалы
-Для выполнения лабораторной работы необходимы будут материалы лекций:
-- [Docker](https://www.youtube.com/watch?v=WjRye2bByEw&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=2)
-- [Docker-compose](https://www.youtube.com/watch?v=-bbxABMdHig&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=5)
-- [Ansible](https://www.youtube.com/watch?v=59HZ6R6nYQ4&list=PLLELLTvDgUQ-iwnE9coLhb-ynyZUGzW6q&index=6)
+### Установка lab6-agent и проверка тестрового стенда
+```
+cd  ssh-agent
+# собираем образ базового контейнера для лабы
+./build.sh
+
+# поднимаем тестовый стенд
+docker-compose up -d --scale app=3
+
+# заходим в контейнер с ansible
+docker exec -it `docker ps -aqf "name=6-ansible-1"` bash 
+```
+
 
 ## Задачи лабораторной работы
 ### Задание 1: Изучить работу ansible на примере adhoc команд
 
+Пример вывода, попробуем вывод
+```
+root@8eb61b55174f:/# ansible all -m ping
+6-app-2 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+6-app-3 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+6-app-1 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+root@8eb61b55174f:/# ansible application -m ping
+6-app-1 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+6-app-2 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+root@8eb61b55174f:/# ansible database -m ping
+6-app-3 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+root@8eb61b55174f:/# 
+
+```
 
 
 ### Задание 2: Изучить работу ansible inventory

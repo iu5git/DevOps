@@ -1,4 +1,4 @@
 FROM lab6-agent
 
 
-RUN apt update && apt install -y ansible
+RUN apt update && apt install -y ansible sshpass

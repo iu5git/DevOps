@@ -1,0 +1,10 @@
+[database]
+6-app-3
+
+[application]
+6-app-1
+6-app-2
+
+[webapp:children]
+database
+application

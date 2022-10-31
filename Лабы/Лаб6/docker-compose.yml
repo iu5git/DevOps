@@ -8,5 +8,8 @@ services:
   ansible:
     build:
       context: ./ansible
+    volumes:
+      - ./ansible/inventory:/inventory
+      - ./ansible/ansible.cfg:/etc/ansible/ansible.cfg
     depends_on:
       - app
