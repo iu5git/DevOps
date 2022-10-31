@@ -18,7 +18,6 @@
   - Разархивировать проект и зайти в папку с проектом:
 ```
 cd DevOps-master/Лабы/Лаб6
-
 Структура директории
 
 ```
@@ -30,17 +29,18 @@ cd  ssh-agent
 ./build.sh
 
 # поднимаем тестовый стенд
+# https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648
+cd ../
 docker-compose up -d --scale app=3
 
 # заходим в контейнер с ansible
 docker exec -it `docker ps -aqf "name=6-ansible-1"` bash 
 ```
 
-
 ## Задачи лабораторной работы
 ### Задание 1: Изучить работу ansible на примере adhoc команд
 
-Пример вывода, попробуем вывод
+**Пример вывода, попробуем вывод**
 ```
 root@8eb61b55174f:/# ansible all -m ping
 6-app-2 | SUCCESS => {
@@ -87,15 +87,26 @@ root@8eb61b55174f:/# ansible database -m ping
     "changed": false,
     "ping": "pong"
 }
-root@8eb61b55174f:/# 
 
 ```
+**Пример вывода, попробуем вывод**
+
+```
+ansible all -m command -a 'uptime'
+6-app-2 | CHANGED | rc=0 >>
+19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
+6-app-1 | CHANGED | rc=0 >>
+19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
+6-app-3 | CHANGED | rc=0 >>
+19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
+```
+
 
 
 ### Задание 2: Изучить работу ansible inventory
 
 ### Задание 3: Изучить работу групп хостов
-https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648
+
 
 ## Формат отчета
 - Doc-документ
