@@ -5,10 +5,12 @@ services:
     image: lab6-agent
     ports:
       - "8080-8090:5000"
+      - "3300-3310:3306"
   ansible:
     build:
       context: ./ansible
     volumes:
+      - ./ansible/playbooks:/playbooks
       - ./ansible/inventory:/inventory
       - ./ansible/ansible.cfg:/etc/ansible/ansible.cfg
     depends_on:

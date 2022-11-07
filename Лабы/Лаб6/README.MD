@@ -102,6 +102,8 @@ ansible all -m command -a 'uptime'
 ```
 
 
+sed -i 's/= 127.0.0.1/= 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+
 
 ### Задание 2: Изучить работу ansible inventory
 

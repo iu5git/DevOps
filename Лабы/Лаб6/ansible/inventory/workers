@@ -1,9 +1,9 @@
 [database]
-6-app-3
+6_app_3
 
 [application]
-6-app-1
-6-app-2
+6_app_1
+6_app_2
 
 [webapp:children]
 database
