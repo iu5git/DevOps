@@ -22,7 +22,9 @@
         dest: /app/.env
         owner: root
         mode: '0600' #- rw—— - -
-
+    - name: Killing previously started pythons (if any)
+      shell: "ps aux | grep -i app.py | awk {'print $2'} | xargs kill -9"
+      ignore_errors: yes
     - name: Start the app
       shell: "cd /app && nohup python3 app.py &"
 

@@ -19,6 +19,34 @@
 ```
 cd DevOps-master/Лабы/Лаб6
 Структура директории
+├── ansible
+│   ├── ansible.cfg
+│   ├── Dockerfile
+│   ├── inventory
+│   │   ├── all_vars
+│   │   ├── ansible_master_vars
+│   │   ├── application_vars
+│   │   ├── database_vars
+│   │   └── workers
+│   └── playbooks
+│       ├── app
+│       │   ├── app.py
+│       │   ├── env.j2
+│       │   └── requirements.txt
+│       ├── mysql
+│       │   ├── dump.sql
+│       │   ├── permissions.sql
+│       │   └── root_cnf.j2
+│       ├── nginx
+│       │   └── nginx.conf.j2
+│       ├── playbook-application.yml
+│       └── playbook-database.yml
+├── docker-compose.yml
+├── download.png
+├── lab6-agent
+│   ├── build.sh
+│   └── Dockerfile
+└── README.MD
 
 ```
 
@@ -169,15 +197,15 @@ netstat -nlp | grep 5000
 ```
 ansible ansible_master -a "name=nginx update_cache=yes cache_valid_time=3600 state=present" -m apt
 ```
-
+Скопируем шаблон конфигурационного файла nginx, поставив в него хосты наших приложений, используется шаблизатор [jinja](https://jinja.palletsprojects.com/en/3.0.x/templates/)
 ```
 ansible ansible_master -a "src=playbooks/nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root" -m template
 ```
-и запустим nginx из консоли:
+и запустим nginx из консоли на хосте 6_ansible_1:
 ```
 nginx
 ```
-
+проверим работу nginx вызвав с нашей хост машины: [localhost:8080](localhost:8080)
 
 ## Формат отчета
 - Doc-документ
