@@ -1,18 +1,28 @@
 ---
 - hosts: application
   tasks:
-    - name: Install MySQL and other required packages
+    - name: Install MySQL client and other required packages
       apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
       with_items:
-          - python3-pip
           - mysql-client
-          - inetutils-ping
-          - net-tools
+
     - name: Prepare app
       copy:
         src: app/    # note the '/' <-- !!!
         dest: /app/
+
     - name: Installing python requirements for app
       pip:
         requirements: requirements.txt
         chdir: /app
+
+    - name: Prepare env for launch
+      template:
+        src: app/env.j2
+        dest: /app/.env
+        owner: root
+        mode: '0600' #- rw—— - -
+
+    - name: Start the app
+      shell: "cd /app && nohup python3 app.py &"
+

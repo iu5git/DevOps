@@ -24,25 +24,48 @@ cd DevOps-master/Лабы/Лаб6
 
 ### Установка lab6-agent и проверка тестрового стенда
 ```
-cd  ssh-agent
+cd  lab6-agent
 # собираем образ базового контейнера для лабы
 ./build.sh
 
 # поднимаем тестовый стенд
-# https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648
-cd ../
-docker-compose up -d --scale app=3
 
-# заходим в контейнер с ansible
-docker exec -it `docker ps -aqf "name=6-ansible-1"` bash 
+cd ../
+docker-compose up -d
+#после успешной компиляции образов и старта кластера
+docker-compose down
 ```
+
 
 ## Задачи лабораторной работы
-### Задание 1: Изучить работу ansible на примере adhoc команд
+### Задание 1: Поднять кластер и установить тестовую базу данных
 
-**Пример вывода, попробуем вывод**
+Поднимаем тестовый стенд
 ```
-root@8eb61b55174f:/# ansible all -m ping
+# ссылка для информации https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648
+docker-compose up -d --scale app=3
+```
+
+Делаем листинг запущенных контейнеров
+```
+docker ps
+```
+
+Находим контейнер 6-ansible-1 или 6_ansible_1 (в разных реализациях docker-compose бывает по разному)
+**Важно! Необходимо заменить в хост файле на _ или - в зависимости от названия в системе**
+
+Заходим на хост с ансиблем
+```
+docker exec -it `docker ps -aqf "name=6-ansible-1"` bash
+```
+**Ad-hoc команды**
+Ad-hoc - вызов отдельных команд.
+Ping - проверяем доступность хостов инвернтори
+```
+ansible all -m ping
+```
+Пример вывода, попробуем вывод
+```
 6-app-2 | SUCCESS => {
     "ansible_facts": {
         "discovered_interpreter_python": "/usr/bin/python3"
@@ -64,35 +87,13 @@ root@8eb61b55174f:/# ansible all -m ping
     "changed": false,
     "ping": "pong"
 }
-root@8eb61b55174f:/# ansible application -m ping
-6-app-1 | SUCCESS => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
-    },
-    "changed": false,
-    "ping": "pong"
-}
-6-app-2 | SUCCESS => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
-    },
-    "changed": false,
-    "ping": "pong"
-}
-root@8eb61b55174f:/# ansible database -m ping
-6-app-3 | SUCCESS => {
-    "ansible_facts": {
-        "discovered_interpreter_python": "/usr/bin/python3"
-    },
-    "changed": false,
-    "ping": "pong"
-}
-
 ```
-**Пример вывода, попробуем вывод**
-
+Команда uptime- проверяем сколько времени поднят сервер
 ```
 ansible all -m command -a 'uptime'
+```
+Пример вывода, попробуем вывод
+```
 6-app-2 | CHANGED | rc=0 >>
 19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
 6-app-1 | CHANGED | rc=0 >>
@@ -101,13 +102,81 @@ ansible all -m command -a 'uptime'
 19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
 ```
 
+Запускаем (плейбук)[ansible/playbooks/playbook-database.yml] для установки базы:
+```
+ansible-playbook /playbooks/playbook-database.yml
+```
+Плейбук поставит и установит базу на хост 6_app_3.
 
-sed -i 's/= 127.0.0.1/= 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf
+Проверяем
+заходим на хост с базой
+```
+ssh 6_app_3
+```
+На хосте заходим в клиент базы mysql
+```
+mysql
+```
+выбираем созданную базу testdb
+```
+mysql> use testdb
+
+## пример вывода: 
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+```
+Сделаем селект из тестовой таблицы
+```
+mysql> select * from test;
+
+# при
++--------------------+
+| message            |
++--------------------+
+| Ansible To Do List |
+| Get ready          |
+| Ansible is fun     |
++--------------------+
+3 rows in set (0.00 sec)
+
+```
+
+# Задание 2: Подготовить работу приложений
+Запускаем (плейбук)[ansible/playbooks/playbook-application.yml] для установки базы:
+```
+ansible-playbook /playbooks/playbook-application.yml
+```
 
 
-### Задание 2: Изучить работу ansible inventory
+с помощью утилиты curl проверим работу приложения и загрузку данных из базы для всех нод
+```
+ansible application -a "curl localhost:5000" -m shell
+```
 
-### Задание 3: Изучить работу групп хостов
+Проверим что процесс работает на хосте
+```
+ssh 6_app_1
+#
+ps ax | grep python 
+
+netstat -nlp | grep 5000
+```
+
+### Задание 3: Установить балансировщик нагрузки nginx используя ad-hoc команды
+поставим необходимвй пакет nginx, давайте установим его без плейбука
+```
+ansible ansible_master -a "name=nginx update_cache=yes cache_valid_time=3600 state=present" -m apt
+```
+
+```
+ansible ansible_master -a "src=playbooks/nginx/nginx.conf.j2 dest=/etc/nginx/nginx.conf owner=root" -m template
+```
+и запустим nginx из консоли:
+```
+nginx
+```
 
 
 ## Формат отчета

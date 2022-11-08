@@ -1,16 +1,21 @@
 import os
+from dotenv import load_dotenv
+
 from typing import List, Dict
 from flask import Flask
 import mysql.connector
 import json
 
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
+if os.path.exists(dotenv_path):
+    load_dotenv(dotenv_path)
 app = Flask(__name__)
 
 
-def favorite_colors() -> List[Dict]:
+def test() -> List[Dict]:
     config = {
         'user': os.environ.get('MYSQL_USER'),
-        'password': os.environ.get('MYSQL_ROOT_PASSWORD'),
+        'password': os.environ.get('MYSQL_PASSWORD'),
         'host': os.environ.get('MYSQL_HOST'),
         'port': os.environ.get('MYSQL_PORT'),
         'database': 'testdb'
@@ -18,16 +23,20 @@ def favorite_colors() -> List[Dict]:
     connection = mysql.connector.connect(**config)
     cursor = connection.cursor()
     cursor.execute('SELECT * FROM test')
-    results = [{message} for (message) in cursor]
+    row_headers=[x[0] for x in cursor.description] #this will extract row headers
+    rv = cursor.fetchall()
+    json_data=[]
+    for result in rv:
+        json_data.append(dict(zip(row_headers,result)))
     cursor.close()
     connection.close()
 
-    return results
+    return json.dumps(json_data)
 
 
 @app.route('/')
 def index() -> str:
-    return json.dumps({'test': favorite_colors()})
+    return test()
 
 
 if __name__ == '__main__':
