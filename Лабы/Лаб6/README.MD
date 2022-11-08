@@ -18,6 +18,8 @@
   - Разархивировать проект и зайти в папку с проектом:
 ```
 cd DevOps-master/Лабы/Лаб6
+```
+```
 Структура директории
 ├── ansible
 │   ├── ansible.cfg
@@ -55,12 +57,14 @@ cd DevOps-master/Лабы/Лаб6
 cd  lab6-agent
 # собираем образ базового контейнера для лабы
 ./build.sh
-
-# поднимаем тестовый стенд
-
+```
+Поднимаем тестовый стенд
+```
 cd ../
 docker-compose up -d
-#после успешной компиляции образов и старта кластера
+```
+После успешной компиляции образов и старта кластера
+```
 docker-compose down
 ```
 
@@ -70,10 +74,9 @@ docker-compose down
 
 Поднимаем тестовый стенд
 ```
-# ссылка для информации https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648
 docker-compose up -d --scale app=3
 ```
-
+[О том, как работает горизонталоьное масштабирование в docker-compose](https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648)
 Делаем листинг запущенных контейнеров
 ```
 docker ps
@@ -150,8 +153,10 @@ mysql
 выбираем созданную базу testdb
 ```
 mysql> use testdb
+```
 
-## пример вывода: 
+Пример вывода: 
+```
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
 
@@ -160,8 +165,9 @@ Database changed
 Сделаем селект из тестовой таблицы
 ```
 mysql> select * from test;
-
-# при
+```
+Пример вывода
+```
 +--------------------+
 | message            |
 +--------------------+
@@ -182,9 +188,13 @@ ansible-playbook /playbooks/playbook-application.yml
 Проверим что процесс работает на хосте
 ```
 ssh 6_app_1
-# После логина найдем что процесс запущен
+```
+После логина найдем что процесс запущен
+```
 ps ax | grep python 
-# И убедимся что порт 5000 открыт
+```
+И убедимся что порт 5000 открыт
+```
 netstat -nlp | grep 5000
 ```
 
