@@ -5,6 +5,7 @@ from typing import List, Dict
 from flask import Flask
 import mysql.connector
 import json
+import socket
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):
@@ -31,7 +32,7 @@ def test() -> List[Dict]:
     cursor.close()
     connection.close()
 
-    return json.dumps(json_data)
+    return json.dumps({socket.gethostname(): json_data})
 
 
 @app.route('/')
