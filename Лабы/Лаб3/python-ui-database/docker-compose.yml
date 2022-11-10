@@ -1,18 +1,26 @@
 version: "3"
 services:
   app:
-    build: app
-    links:
+    build: ./app  # контекст для сборки, по-умолчанию ищет Dockerfile в этой директории
+    links: # связь контейнеров друг с другом, один из способов организации сетевого взаимодействия
       - db
-    ports:
+    ports:  # проброс портов <Host>:<Container>
       - "8090:5000"
+    environment:
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PORT: 5000
 
   db:
     image: mysql:5.7
     ports:
       - "32000:3306"
-    volumes:
+    volumes: # привязка каталога на диске хост машины к контейнеру
       - ./db:/docker-entrypoint-initdb.d/:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest

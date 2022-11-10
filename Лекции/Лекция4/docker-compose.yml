@@ -1,0 +1,9 @@
+version: "3.2"
+
+services:
+  nginxtest:
+    image: nginx:alpine
+    ports:
+      - "8090:80"
+    volumes:
+      - ./test.html:/usr/share/nginx/html/index.html

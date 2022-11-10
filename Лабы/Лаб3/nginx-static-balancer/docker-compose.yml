@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  nworker1:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+      args:
+        - WORKER_ID=1
+    expose:
+      - 80
+
+  nworker2:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+      args:
+        - WORKER_ID=2
+    expose:
+      - 80
+
+  nworker3:
+    build:
+      context: ../worker
+      dockerfile: Dockerfile
+      args:
+        - WORKER_ID=3
+    expose:
+      - 80
+
+  nginxproxy:
+    build: nginx
+    ports: 
+      - "8080:8080"
+    expose:
+      - 80
+    depends_on: 
+      - nworker1
+      - nworker2
+      - nworker3
