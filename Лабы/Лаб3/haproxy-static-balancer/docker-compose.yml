@@ -4,7 +4,7 @@ services:
   worker1:
     build:
       context: ../worker
-      dockerfile: ../worker/Dockerfile
+      dockerfile: Dockerfile
       args:
         - WORKER_ID=1
     expose:
@@ -12,7 +12,7 @@ services:
   worker2:
     build:
       context: ../worker
-      dockerfile: ../worker/Dockerfile
+      dockerfile: Dockerfile
       args:
         - WORKER_ID=2
     expose:
