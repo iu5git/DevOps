@@ -45,7 +45,7 @@ resource "kubernetes_service" "echo" {
   }
 
   spec {
-    selector {
+    selector ={
       app = "${kubernetes_replication_controller.echo.metadata.0.labels.app}"
     }
 
