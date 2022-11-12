@@ -18,6 +18,8 @@
   - Разархивировать проект и зайти в папку с проектом:
 ```
 cd DevOps-master/Лабы/Лаб6
+```
+```
 Структура директории
 ├── ansible
 │   ├── ansible.cfg
@@ -55,12 +57,14 @@ cd DevOps-master/Лабы/Лаб6
 cd  lab6-agent
 # собираем образ базового контейнера для лабы
 ./build.sh
-
-# поднимаем тестовый стенд
-
+```
+Поднимаем тестовый стенд
+```
 cd ../
 docker-compose up -d
-#после успешной компиляции образов и старта кластера
+```
+После успешной компиляции образов и старта кластера
+```
 docker-compose down
 ```
 
@@ -70,21 +74,22 @@ docker-compose down
 
 Поднимаем тестовый стенд
 ```
-# ссылка для информации https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648
 docker-compose up -d --scale app=3
 ```
-
+[О том, как работает горизонталоьное масштабирование в docker-compose](https://karthi-net.medium.com/how-to-scale-services-using-docker-compose-31d7b83a6648)
 Делаем листинг запущенных контейнеров
 ```
 docker ps
 ```
-
+![dockerps.png](dockerps.png)
 Находим контейнер 6-ansible-1 или 6_ansible_1 (в разных реализациях docker-compose бывает по разному)
-**Важно! Необходимо заменить в хост файле на _ или - в зависимости от названия в системе**
+**Важно! Необходимо заменить в [инвентори файле](ansible/inventory/workers) на _ или - в зависимости от названия в системе**
 
 Заходим на хост с ансиблем
 ```
 docker exec -it `docker ps -aqf "name=6-ansible-1"` bash
+#или
+docker exec -it `docker ps -aqf "name=6_ansible_1"` bash
 ```
 **Ad-hoc команды**
 Ad-hoc - вызов отдельных команд.
@@ -92,7 +97,7 @@ Ping - проверяем доступность хостов инвернтор
 ```
 ansible all -m ping
 ```
-Пример вывода, попробуем вывод
+Пример вывода
 ```
 6-app-2 | SUCCESS => {
     "ansible_facts": {
@@ -120,7 +125,7 @@ ansible all -m ping
 ```
 ansible all -m command -a 'uptime'
 ```
-Пример вывода, попробуем вывод
+Пример вывода
 ```
 6-app-2 | CHANGED | rc=0 >>
 19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
@@ -130,14 +135,14 @@ ansible all -m command -a 'uptime'
 19:08:47 up 1 day,  4:18,  1 user,  load average: 1.39, 1.14, 1.22
 ```
 
-Запускаем (плейбук)[ansible/playbooks/playbook-database.yml] для установки базы:
+Запускаем [плейбук для установки базы](ansible/playbooks/playbook-database.yml):
 ```
 ansible-playbook /playbooks/playbook-database.yml
 ```
 Плейбук поставит и установит базу на хост 6_app_3.
 
 Проверяем
-заходим на хост с базой
+заходим на хост с базой (из масер-хоста ansible: 6_ansible_1)
 ```
 ssh 6_app_3
 ```
@@ -148,8 +153,10 @@ mysql
 выбираем созданную базу testdb
 ```
 mysql> use testdb
+```
 
-## пример вывода: 
+Пример вывода: 
+```
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
 
@@ -158,8 +165,9 @@ Database changed
 Сделаем селект из тестовой таблицы
 ```
 mysql> select * from test;
-
-# при
+```
+Пример вывода
+```
 +--------------------+
 | message            |
 +--------------------+
@@ -172,24 +180,28 @@ mysql> select * from test;
 ```
 
 # Задание 2: Подготовить работу приложений
-Запускаем (плейбук)[ansible/playbooks/playbook-application.yml] для установки базы:
+Запускаем [плейбук для установки приложений](ansible/playbooks/playbook-application.yml) :
 ```
 ansible-playbook /playbooks/playbook-application.yml
-```
-
-
-с помощью утилиты curl проверим работу приложения и загрузку данных из базы для всех нод
-```
-ansible application -a "curl localhost:5000" -m shell
 ```
 
 Проверим что процесс работает на хосте
 ```
 ssh 6_app_1
-#
+```
+После логина найдем что процесс запущен
+```
 ps ax | grep python 
-
+```
+И убедимся что порт 5000 открыт
+```
 netstat -nlp | grep 5000
+```
+
+Для проверки, что приложение запущено на всех хостах и чтобы не проверять по одному, воспользуемся adhoc командой. 
+C помощью утилиты curl проверим работу сервиса и загрузку данных из базы для всех нод
+```
+ansible application -a "curl localhost:5000" -m shell
 ```
 
 ### Задание 3: Установить балансировщик нагрузки nginx используя ad-hoc команды
@@ -207,8 +219,8 @@ nginx
 ```
 проверим работу nginx вызвав с нашей хост машины: [localhost:8080](localhost:8080)
 
-### Задание 4: Добавить еще один экземпляр 6_app_3
-Добавить еще один экземпляр, прописав изменения во всех необходимых файлах.
+### Задание 4: Добавить еще один экземпляр 6_app_4
+Добавить еще один экземпляр приложения python, прописав изменения во всех необходимых файлах.
 
 ## Формат отчета
 - Doc-документ
