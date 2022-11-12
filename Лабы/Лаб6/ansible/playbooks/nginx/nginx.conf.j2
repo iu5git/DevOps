@@ -1,0 +1,20 @@
+http {
+  upstream backend {
+    {% for app in groups['application'] %}
+      server {{ app }}:5000;
+    {% endfor %}
+
+  }
+
+  server {
+    listen 8080 default_server;
+    listen [::]:8080 default_server;
+    server_name localhost;
+    proxy_read_timeout 5m;
+    location / {
+      proxy_pass http://backend;
+    }
+  }
+}
+
+events { }

@@ -1,0 +1,77 @@
+---
+- hosts: database
+  tasks:
+    - name: Install MySQL and other required packages
+      apt: name={{ item }} update_cache=yes cache_valid_time=3600 state=present
+      with_items:
+        - mysql-server
+
+    - name: Save root password in .my.cnf - to access locally from the host
+      template:
+        src: mysql/root_cnf.j2
+        dest: /root/.my.cnf
+        owner: root
+        mode: '0600' #- rw—— - -
+
+    - name: Make sure pymysql is present
+      become: true # needed if the other tasks are not played as root
+      pip:
+        name: pymysql
+        state: present
+
+    - name: Start the MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+
+    - name: Set password for root user
+      mysql_user:
+        name: "root"
+        password: "{{ mysql_root_password }}"
+        priv: '*.*:ALL,GRANT'
+        host: 'localhost'
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+        state: present
+
+    - name: Stop the MySQL service(if was running)
+      service:
+        name: mysql
+        state: stopped
+        enabled: true
+
+    - name: Expose mysql for other hosts
+      shell: "sed -i 's/= 127.0.0.1/= 0.0.0.0/' /etc/mysql/mysql.conf.d/mysqld.cnf"
+
+    - name: copy permissions
+      copy:
+        src: mysql/permissions.sql
+        dest: /tmp/permissions.sql
+
+    - name: add sample data to database host
+      copy:
+        src: mysql/dump.sql
+        dest: /tmp/dump.sql
+
+    - name: Start the MySQL service
+      service:
+        name: mysql
+        state: started
+        enabled: true
+
+    - name: apply permissions
+      mysql_db:
+        name: testdb
+        state: import
+        target: /tmp/permissions.sql
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+
+    - name: insert sample data into database
+      mysql_db:
+          name: testdb
+          state: import
+          target: /tmp/dump.sql
+          login_user: root
+          login_password: "{{ mysql_root_password }}"

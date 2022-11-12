@@ -1,0 +1,1 @@
+docker build -t lab6-agent .
