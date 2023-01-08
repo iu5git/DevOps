@@ -146,3 +146,4 @@ ELK и тд
 
 1. [Открытая вечерняя школа. Kubernetes для разработчиков (Осень 2021)](https://www.youtube.com/playlist?list=PL8D2P0ruohOBSA_CDqJLflJ8FLJNe26K-)
 2. [Микрослужбы .NET: Архитектура контейнерных приложений .NET](https://learn.microsoft.com/ru-ru/dotnet/architecture/microservices/)
+3. Обсуждение книги Мартина Клеппмана "Designing Data-Intensive Applications" в формате [подкастов Tinkoff Reader Club "Code of Architecture"](https://www.youtube.com/playlist?list=PLLrf_044z4JpIlGkIDn6sdBstsTkKMXU6)
