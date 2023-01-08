@@ -141,3 +141,8 @@ ELK и тд
 ## Практикум в BASIS
 
 По ДЗ BASIS от Ростелеком: Helm, и тд - только для сертификата Ростелекома
+
+## Полезные ссылки
+
+1. [Открытая вечерняя школа. Kubernetes для разработчиков (Осень 2021)](https://www.youtube.com/playlist?list=PL8D2P0ruohOBSA_CDqJLflJ8FLJNe26K-)
+2. [Микрослужбы .NET: Архитектура контейнерных приложений .NET](https://learn.microsoft.com/ru-ru/dotnet/architecture/microservices/)
